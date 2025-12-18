@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ProductCard from "./ProCurd"; 
-import { products } from "@/app/data/product";
+import { products } from "@/data/product";
 
 const Product = () => {
   return (
