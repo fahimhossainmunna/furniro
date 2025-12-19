@@ -1,8 +1,15 @@
 import React from 'react'
+import ShopBanner from './ShopBanner'
+import ShopCard from './ShopCard'
+import ServiceBar from './ServiceBar'
 
 const Shop = () => {
   return (
-    <div>shop page</div>
+    <>
+    <ShopBanner/>
+    <ShopCard/>
+    <ServiceBar/>
+    </>
   )
 }
 

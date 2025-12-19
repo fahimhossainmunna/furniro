@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -6,6 +7,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { CiHeart, CiSearch } from "react-icons/ci";
 import { MdManageAccounts } from "react-icons/md";
 import { HiMenu, HiX } from "react-icons/hi";
+import { useCart } from "@/context/CartContext";
 
 const menu = [
   { name: "Home", path: "/" },
@@ -16,12 +18,21 @@ const menu = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { cart, setOpenCart } = useCart();
+
+  const totalQty = cart.reduce(
+    (sum: number, item: any) => sum + item.qty,
+    0
+  );
 
   return (
     <>
-      {/* Navbar */}
+      {/* ================= NAVBAR ================= */}
       <div className="max-w-[1320px] mx-auto px-4 py-5 flex items-center justify-between">
-        <Image src="/images/logo.png" alt="logo" width={185} height={41} />
+        {/* Logo */}
+        <Link href="/">
+          <Image src="/images/logo.png" alt="logo" width={185} height={41} />
+        </Link>
 
         {/* Desktop Menu */}
         <ul className="hidden lg:flex items-center gap-x-10">
@@ -44,7 +55,19 @@ const Navbar = () => {
           <MdManageAccounts />
           <CiSearch />
           <CiHeart />
-          <AiOutlineShoppingCart />
+
+          {/* Cart */}
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setOpenCart(true)}
+          >
+            <AiOutlineShoppingCart />
+            {totalQty > 0 && (
+              <span className="absolute -top-2 -right-3 bg-black text-white text-[12px] font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                {totalQty}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -57,18 +80,18 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Overlay */}
+      {/* ================= MOBILE OVERLAY ================= */}
       <div
-        className={`fixed inset-0 bg-black/40 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={() => setOpen(false)}
       />
 
-      {/* Sidebar */}
+      {/* ================= MOBILE SIDEBAR ================= */}
       <div
         className={`fixed top-0 right-0 h-full w-[280px] bg-white z-50
-        transform transition-transform duration-300 ease-in-out
+        transform transition-transform duration-300
         ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="p-6 flex flex-col gap-y-6">
@@ -83,11 +106,27 @@ const Navbar = () => {
             </Link>
           ))}
 
+          {/* Mobile Icons */}
           <div className="flex items-center gap-x-6 text-[26px] pt-6 border-t">
             <MdManageAccounts />
             <CiSearch />
             <CiHeart />
-            <AiOutlineShoppingCart />
+
+            {/* Mobile Cart */}
+            <div
+              className="relative cursor-pointer"
+              onClick={() => {
+                setOpen(false);
+                setOpenCart(true);
+              }}
+            >
+              <AiOutlineShoppingCart />
+              {totalQty > 0 && (
+                <span className="absolute -top-2 -right-3 bg-black text-white text-[12px] font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                  {totalQty}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
